@@ -1,37 +1,25 @@
 import React, {useState} from 'react';
-import {Text, StyleSheet, TextInput, View, Button, ScrollView, FlatList } from 'react-native';
+import { StyleSheet, View,FlatList } from 'react-native';
+import GoalItem from './components/GoalItem';
+import GoalInput from './components/GoalInput';
 
 export default function App() {
-  const [enteredGoal, setEnteredGoal] = useState('');
+
   const [courseGoals, setCourseGoals] = useState([]);
 
-  const goalInputHandler = (enteredText) => {
-    setEnteredGoal(enteredText);
-  }
-
-  const addGoalHandler = () => {
-    setCourseGoals(currentGoals => [...courseGoals, {id: Math.random().toString(), value: enteredGoal}] );
+  const addGoalHandler = goalTitle => {
+    setCourseGoals(currentGoals =>
+       [...courseGoals, 
+      {id: Math.random().toString(), value: goalTitle}
+    ] );
   }
   return (
     <View style={styles.mainview}>
-      <View style={styles.inputContainer}>
-           <TextInput 
-           placeholder="Course Goal"
-           style={styles.inputBox}
-           onChangeText={goalInputHandler}
-           value={enteredGoal}/>
-           <Button title="ADD"  onPress={addGoalHandler}/>
-      </View>
-      <FlatList 
+      <GoalInput onAddGoal={addGoalHandler}/>
+     <FlatList 
       keyExtractor = {(item,index) => item.id}
       data = {courseGoals} 
-      renderItem = {itemData => (
-             <View style={styles.listItem}>
-                <Text>{itemData.item.value}</Text>
-             </View>
-            )}/>
-           
-      
+      renderItem = {itemData => <GoalItem title={itemData.item.value}/>}/>    
     </View>
   );
 }
@@ -39,23 +27,5 @@ export default function App() {
 const styles = StyleSheet.create({
  mainview: {
    padding: 50
- },
- inputContainer: {
-  flexDirection:'row',
-   justifyContent:'space-between',
-    alignItems:'center'
- },
- inputBox: {
-  width:"80%",
-   borderColor:'black',
-    borderWidth:1,
-     padding:6
- },
- listItem: {
-  padding: 10,
-  marginVertical: 10,
-  backgroundColor: '#ccc',
-  borderColor: 'black',
-  borderWidth: 1
  }
 });
